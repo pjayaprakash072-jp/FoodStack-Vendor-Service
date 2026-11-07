@@ -6,7 +6,7 @@ const cloudinary = require('../config/cloudinary');
 const {sendWelcomeEmail}  =  require('../utils/email')
 const createVendor = async (req, res) => {
     try {
-        const authId = req.params.authId;
+        const authId = req.query.authId;
         const{
             name,
             email,
