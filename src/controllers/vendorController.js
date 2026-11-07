@@ -80,10 +80,10 @@ const getAllVendors = async (req, res) => {
     }
 };
 
-const getVendorById = async (req, res) => {
+const getVendorByEmail = async (req, res) => {
     try {
-        const vendorId = req.vendorId;
-        const vendor = await Vendor.findById(vendorId);
+        const {email} = req.query;
+        const vendor = await Vendor.findOne({email});
         if (!vendor) {
             return res.status(404).json({ message: "Vendor not found, Failed to retrieve vendor By Id." });
         }
@@ -198,7 +198,7 @@ const deleteVendor = async (req, res) => {
 module.exports = {
     createVendor,
     getAllVendors,
-    getVendorById,
+    getVendorByEmail,
     updateVendor,
     deleteVendor
 };
