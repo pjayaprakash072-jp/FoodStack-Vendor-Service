@@ -3,6 +3,10 @@ const Outlet = require('../models/Outlet');
 const MenuCategory = require('../models/MenuCategory');
 const MenuItem = require('../models/MenuItem');
 const cloudinary = require('../config/cloudinary');
+const {
+    updateVendorAuth,
+    deleteVendorAuth
+} =  require('../service/vendorAuthService')
 const createVendor = async (req, res) => {
     try {
         const authId = req.query.authId;
@@ -118,8 +122,10 @@ const updateVendor = async (req, res) => {
         // update otehr values
         const {...otherFields} = req.body;
         Object.assign(vendor,otherFields);
+        console.log(otherFields);
+        await updateVendorAuth(otherFields,req.headers.token);
         await vendor.save();
-        // const vendorResponse = vendor.toObject();
+
         res.status(200).json(
             { 
                 message: "Vendor updated successfully", 
@@ -140,7 +146,7 @@ const updateVendor = async (req, res) => {
 
 const deleteVendor = async (req, res) => {
     try {
-        const vendorId = req.params.id;
+        const vendorId = req.vendorId;
         const vendor = await Vendor.findById(vendorId);
         if (!vendor) {
             return res.status(404).json({ message: "Vendor not found" });
@@ -169,8 +175,8 @@ const deleteVendor = async (req, res) => {
         if(vendor.profileImg?.public_id){
             await cloudinary.uploader.destroy(vendor.profileImg.public_id);
         }
+        await deleteVendorAuth(req.headers.token);
         await Vendor.findByIdAndDelete(vendorId);
-        console.log("deleted.")
         res.status(200).json(
             { 
                 message: "Vendor deleted successfully", 

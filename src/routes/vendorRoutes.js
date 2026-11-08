@@ -9,6 +9,6 @@ router.post("/create", upload.single("profileImg"), createVendor);
 router.get("/getall", getAllVendors);
 router.get("/get",getVendorByEmail);
 router.put("/update",verifyToken, authorizeRoles("vendor"), upload.single("profileImg"), updateVendor);
-router.delete("/delete/:id", deleteVendor);
+router.delete("/delete",verifyToken, deleteVendor);
 
 module.exports = router;
